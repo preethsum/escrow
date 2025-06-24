@@ -15,7 +15,8 @@ declare_id!("H4spQCJhKeoNEn8naUATKgsPTJqXRSBYp6bXMcCdePte");
 pub mod escrow {
     use super::*;
 
-    pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
-        initialize::handler(ctx)
+    pub fn make_offer(ctx: Context<MakeOffer>) -> Result<()> {
+        make_offer::transfer_tokens_to_vault(ctx);
+        Ok(())
     }
 }
