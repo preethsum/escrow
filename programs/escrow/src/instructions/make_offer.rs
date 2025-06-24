@@ -1,6 +1,7 @@
 use anchor_lang::prelude::*;
 use anchor_spl::{
     associated_token::AssociatedToken,
+    token_2022::AmountToUiAmount,
     token_interface::{Mint, TokenAccount, TokenInterface},
 };
 
@@ -52,7 +53,26 @@ pub struct MakeOffer<'info> {
     pub system_program: Program<'info, System>,
 }
 
-pub fn transfer_tokens_to_vault(ctx: Context<MakeOffer>) -> Result<()> {
-    transfer_tokens(&ctx.accounts., to, authority, token_program, mint, amount)
+pub fn transfer_tokens_to_vault(ctx: &Context<MakeOffer>, amount: u64) -> Result<()> {
+    transfer_tokens(
+        &ctx.accounts.maker_token_a_account,
+        &ctx.accounts.token_a_vault,
+        &ctx.accounts.maker,
+        &ctx.accounts.token_program,
+        &ctx.accounts.token_a_mint,
+        amount,
+    )
+}
+
+pub fn save_offer(ctx: Context<MakeOffer>, token_a_amount: u64, token_b_amount: u64) -> Result<()> {
+    let offer = &mut ctx.accounts.offer;
+    offer.maker = ctx.accounts.maker.key();
+    offer.token_a_mint = ctx.accounts.token_a_mint.key();
+    offer.token_b_mint = ctx.accounts.token_b_mint.key();
+    offer.token_a_amount = token_a_amount;
+    offer.token_b_amount = token_b_amount;
+    offer.is_active = true;
+    offer.bump = ctx.bumps.offer;
+
     Ok(())
 }

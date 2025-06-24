@@ -15,8 +15,12 @@ declare_id!("H4spQCJhKeoNEn8naUATKgsPTJqXRSBYp6bXMcCdePte");
 pub mod escrow {
     use super::*;
 
-    pub fn make_offer(ctx: Context<MakeOffer>) -> Result<()> {
-        make_offer::transfer_tokens_to_vault(ctx);
-        Ok(())
+    pub fn make_offer(
+        ctx: Context<MakeOffer>,
+        token_a_amount: u64,
+        token_b_amount: u64,
+    ) -> Result<()> {
+        make_offer::transfer_tokens_to_vault(&ctx, token_a_amount)?;
+        make_offer::save_offer(ctx, token_a_amount, token_b_amount)
     }
 }
