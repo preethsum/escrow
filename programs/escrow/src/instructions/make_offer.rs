@@ -4,15 +4,30 @@ use anchor_spl::{
     token_interface::{Mint, TokenAccount, TokenInterface},
 };
 
-use crate::{Offer, ANCHOR_DISCRIMINATION};
+use crate::{transfer_tokens, Offer, ANCHOR_DISCRIMINATION};
 
 #[derive(Accounts)]
 pub struct MakeOffer<'info> {
     #[account(mut)]
     pub maker: Signer<'info>,
 
-    #[account()]
+    #[account(
+    mint::token_program = token_program,
+    )]
     pub token_a_mint: InterfaceAccount<'info, Mint>,
+
+    #[account(
+        mint::token_program = token_program
+    )]
+    pub token_b_mint: InterfaceAccount<'info, Mint>,
+
+    #[account(
+        mut,
+        associated_token::mint = token_a_mint,
+        associated_token::authority = maker,
+        associated_token::token_program = token_program,
+    )]
+    pub maker_token_a_account: InterfaceAccount<'info, TokenAccount>,
 
     #[account(
         init,
@@ -38,6 +53,6 @@ pub struct MakeOffer<'info> {
 }
 
 pub fn transfer_tokens_to_vault(ctx: Context<MakeOffer>) -> Result<()> {
-    msg!("Greetings from: {:?}", ctx.program_id);
+    transfer_tokens(&ctx.accounts., to, authority, token_program, mint, amount)
     Ok(())
 }
