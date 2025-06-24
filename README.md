@@ -18,3 +18,7 @@ git clone https://github.com/preethsum/escrow.git
 cd escrow
 anchor build
 ```
+
+## Disclaimer
+
+This code is not production ready, it may contain bugs.
